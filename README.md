@@ -13,10 +13,10 @@ The library **GLAD** appears to solve this problem. Basically, it dinamically cr
 > [!NOTE] 
 > To understand more about glad and Loading Libraries, refer to the OpenGL [wiki](https://www.khronos.org/opengl/wiki/OpenGL_Loading_Library)
 
-The last library in the recipe is *GLEW*. Glew is basically an extension library to OpenGL. It defines some functions that help your use of the library functions, like creating windows, detecting input and others. This [stackoverflow answer](https://stackoverflow.com/a/48268450) has a great explanation:
+The last library in the recipe is *GLEW*. Glew is basically an extension library to OpenGL. It defines some functions that help your use of the library functions, like creating windows, detecting input and others. This [stack exchange post answer](https://softwareengineering.stackexchange.com/a/345211) has a great explanation:
 
 >*"Different platforms (such as Windows, Linux/X, OSX, iOS, Android) provide different mechanisms for creating contexts. For example Windows has its own function calls that allow the creation of OpenGL contexts that are very different from how OSX creates a context. Additionally Windows provides functions to support things like mouse events. This is where GLFW comes in: it provides a cross-platform library to handle the things that OpenGL doesn't handle, like creating contexts and handling mouse events. By and large it's not a wrapper library on top of OpenGL though it does provide some a small amount of functionality like this: like automatically building mip-map levels."*
 
-# Things I haven`t undestood yet:
+### Things I haven`t undestood yet:
 
 - I have zero idea why the -lglfw works but the -lglfw3 dont work on my machine. Even tough I`m farely sure I dont have the glfw (without 3) installed.
