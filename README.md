@@ -5,11 +5,12 @@ This project is meant to follow the tutorial based from [learnopengl.com](learno
 **OpenGL** is an API. it defines some functions and effects. Each vendor (NVIDIA, AMD, Intel, ...) implements those functions inside their drivers. Since the locations of the header and .so files are different for different OSs and vendors, you would need to create a lot of function pointers at runtime to be able to use those functions in your code. 
 
 >[!NOTE]
-> If you want a better undewrstanding of how the OpenGl specification works, you can check out the [wikipedia article about it](https://en.wikipedia.org/wiki/OpenGL)
+> If you want a better understanding of how the OpenGl specification works, you can check out the [wikipedia article about it](https://en.wikipedia.org/wiki/OpenGL)\
 > The *original* open gl header (in my case defined by the mesa3d graphics driver), is located in the path  `/usr/include/GL/gl.h`
 
 The library **GLAD** appears to solve this problem. Basically, it dinamically creates the function pointers for you and make them available when you include the libraryusing the `#include <glad/glad.h>`. This is the reason, by the way, why you dont have to explicitly include the library gl.h.
 
+> [!NOTE] 
 > To understand more about glad and Loading Libraries, refer to the OpenGL [wiki](https://www.khronos.org/opengl/wiki/OpenGL_Loading_Library)
 
 The last library in the recipe is *GLEW*. Glew is basically an extension library to OpenGL. It defines some functions that help your use of the library functions, like creating windows, detecting input and others. This [stackoverflow answer]() has a great explanation:
