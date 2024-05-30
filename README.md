@@ -1,4 +1,4 @@
-This project is meant to follow the tutorial based from [learnopengl.com](learnopengl.com)
+This is my attempt to learn the basics of OpenGL and getting started into graphics programming. For that, I`ll initially follow the path from [learnopengl.com](learnopengl.com) and as I get comfortable with the library and its capabilities I expect to explore more
 
 ### Understanding the different libraries used by this project 
 
@@ -20,3 +20,7 @@ The last library in the recipe is *GLEW*. Glew is basically an extension library
 ### Things I haven`t undestood yet:
 
 - I have zero idea why the -lglfw works but the -lglfw3 dont work on my machine. Even tough I`m farely sure I dont have the glfw (without 3) installed.
+
+
+### Challenges
+- Try to render more than one object at once
