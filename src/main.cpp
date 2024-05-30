@@ -11,17 +11,11 @@
 
 
 //Define vertex data
-float vertexData[]= {
-	-0.5f, -0.5f, 0.0f,	
-	 0.5f,  0.5f, 0.0f,	
-	 0.0f,  0.5f, 0.0f,	
-};
-
-float vertex2[]= {
-	-0.5f, -0.5f, 0.0f,	
-	 0.5f,  0.5f, 0.0f,	
-	 0.0f,  0.5f, 0.0f,	
-};
+float vertexData[] = {
+     0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
+    -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // bottom left
+     0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f    // top 
+};    
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
@@ -133,7 +127,7 @@ int main() {
 	glDeleteShader(frag_shader_id);
 
 	//Create BufferObject to store vertex data
-	int bufferObj,vao;
+	int bufferObj, vao;
 	glGenBuffers(1, (GLuint*)&bufferObj);
 
 	glGenVertexArrays(1,(GLuint*)&vao);
@@ -144,8 +138,14 @@ int main() {
 	//Notice we can transfer data for the buffer bind point, but not directly
 	//to the buffer itself. Its kind of a proxy
 	glBufferData(GL_ARRAY_BUFFER,sizeof(vertexData),vertexData,GL_STATIC_DRAW);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	
+	// position attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+	
+	// color attribute
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3* sizeof(float)));
+	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(0);	
 
 
