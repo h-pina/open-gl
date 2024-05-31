@@ -1,13 +1,12 @@
 #include <cmath>
-#include <cstdint>
-#include <fstream>
 #include <ostream>
 #include <string>
 #include <iostream>
 
+#include "Shader.hpp"
+
 #include <glad/glad.h> // OpenGL function pointers resolution 
 #include <GLFW/glfw3.h> //Extensionns on openGL functionality to interact with OS 
-#include <sstream>
 
 
 //Define vertex data
@@ -53,14 +52,6 @@ void setupCallbacks(GLFWwindow* window){
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback); //resize callback function
 }
 
-std::string fetchShaderSource(std::string path){
-	std::ifstream fs(path);
-	std::stringstream fss;
-	fss << fs.rdbuf();
-	std::string fileContents = fss.str();
-	return fileContents;
-}
-
 void cleanup(){
 	glfwTerminate();
 }
@@ -86,50 +77,7 @@ int main() {
 	//Callbacks definition
 	setupCallbacks(window);
 	
-	std::string vertSrc = fetchShaderSource("./src/vertex_shader.glsl");
-	std::string fragSrc = fetchShaderSource("./src/frag_shader.glsl");
-	const char* vertexShaderSrc = vertSrc.c_str();
-	const char* fragShaderSrc = fragSrc.c_str();
-
-
-	int success;
-	char infoLog[512];
-	//Create shaders
-	glCreateShader(GL_VERTEX_SHADER);
-	uint32_t vert_shader_id = glCreateShader(GL_VERTEX_SHADER);
-	uint32_t frag_shader_id = glCreateShader(GL_FRAGMENT_SHADER);
-	//c_str terminates the string with null terminator. This way the last argument dont
-	//need to be set 
-	glShaderSource(vert_shader_id, 1, &vertexShaderSrc, NULL);
-	glShaderSource(frag_shader_id, 1, &fragShaderSrc, NULL);
-
-	glCompileShader(vert_shader_id);
-	glCompileShader(frag_shader_id); 
-	glGetShaderiv(vert_shader_id, GL_COMPILE_STATUS, &success);
-	if (!success) {
-			glGetShaderInfoLog(vert_shader_id, 512, NULL, infoLog);
-			std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-	}
-	glGetShaderiv(frag_shader_id, GL_COMPILE_STATUS, &success);
-	if (!success) {
-			glGetShaderInfoLog(frag_shader_id, 512, NULL, infoLog);
-			std::cout << "ERROR::SHADER::FRAG::COMPILATION_FAILED\n" << infoLog << std::endl;
-	}
-	
-	//c_str terminates the string with null terminator. This way the last argument dont
-	//need to be set 
-	uint32_t programId = glCreateProgram();
-	glAttachShader(programId,vert_shader_id);
-	glAttachShader(programId,frag_shader_id);
-	glLinkProgram(programId);
-	glUseProgram(programId);
-	glGetProgramiv(programId, GL_LINK_STATUS, &success);
-	if (!success) {
-			glGetProgramInfoLog(programId, 512, NULL, infoLog);
-			std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
-	}
-	glDeleteShader(vert_shader_id);
-	glDeleteShader(frag_shader_id);
+	Shader shaderProgram = Shader("./src/vertex_shader.glsl","./src/frag_shader.glsl");
 
 	//Create BufferObject to store vertex data
 	int bufferObjs[2], vaos[2];
@@ -137,10 +85,7 @@ int main() {
 	glGenVertexArrays(2,(GLuint*)&vaos);
 
 	glBindVertexArray(vaos[0]);
-	//https://registry.khronos.org/OpenGL-Refpages/gl4/html/glBindBuffer.xhtml
 	glBindBuffer(GL_ARRAY_BUFFER, bufferObjs[0]); 
-	//Notice we can transfer data for the buffer bind point, but not directly
-	//to the buffer itself. Its kind of a proxy
 	glBufferData(GL_ARRAY_BUFFER,sizeof(vertexData),vertexData,GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3* sizeof(float)));
@@ -148,13 +93,8 @@ int main() {
 	glEnableVertexAttribArray(1);
 
 	glBindVertexArray(0);
-	//https://registry.khronos.org/OpenGL-Refpages/gl4/html/glBindBuffer.xhtml
 	glBindBuffer(GL_ARRAY_BUFFER, bufferObjs[1]); 
-	//Notice we can transfer data for the buffer bind point, but not directly
-	//to the buffer itself. Its kind of a proxy
 	glBufferData(GL_ARRAY_BUFFER,sizeof(v2D),v2D,GL_STATIC_DRAW);
-	//This has nothing to do with the VAO. It configures the GL_ARRAY BUFFER. The VAO just
-	//stores this config
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3* sizeof(float)));
 	glEnableVertexAttribArray(0);
@@ -167,7 +107,7 @@ int main() {
 			glClearColor(0.5f,0.5f,0.5f,1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
 
-			glUseProgram(programId);
+			shaderProgram.use();
 
 			glBindVertexArray(vaos[0]);
 			glDrawArrays(GL_TRIANGLES, 0, 3);
