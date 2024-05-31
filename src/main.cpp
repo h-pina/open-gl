@@ -14,7 +14,12 @@
 float vertexData[] = {
      0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
     -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // bottom left
-     0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f    // top 
+     0.0f,  0.5f, 1.0f,  0.0f, 0.0f, 1.0f    // top 
+};    
+float v2D[] = {
+    -0.5f, 0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
+    0.5f, 0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // bottom left
+     0.0f,  0.0f, 1.0f,  0.0f, 0.0f, 1.0f    // top 
 };    
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
@@ -127,27 +132,33 @@ int main() {
 	glDeleteShader(frag_shader_id);
 
 	//Create BufferObject to store vertex data
-	int bufferObj, vao;
-	glGenBuffers(1, (GLuint*)&bufferObj);
+	int bufferObjs[2], vaos[2];
+	glGenBuffers(2, (GLuint*)&bufferObjs);
+	glGenVertexArrays(2,(GLuint*)&vaos);
 
-	glGenVertexArrays(1,(GLuint*)&vao);
-	glBindVertexArray(vao);
-
+	glBindVertexArray(vaos[0]);
 	//https://registry.khronos.org/OpenGL-Refpages/gl4/html/glBindBuffer.xhtml
-	glBindBuffer(GL_ARRAY_BUFFER, bufferObj); 
+	glBindBuffer(GL_ARRAY_BUFFER, bufferObjs[0]); 
 	//Notice we can transfer data for the buffer bind point, but not directly
 	//to the buffer itself. Its kind of a proxy
 	glBufferData(GL_ARRAY_BUFFER,sizeof(vertexData),vertexData,GL_STATIC_DRAW);
-	
-	// position attribute
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-	
-	// color attribute
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3* sizeof(float)));
+	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
-	glEnableVertexAttribArray(0);	
 
+	glBindVertexArray(0);
+	//https://registry.khronos.org/OpenGL-Refpages/gl4/html/glBindBuffer.xhtml
+	glBindBuffer(GL_ARRAY_BUFFER, bufferObjs[1]); 
+	//Notice we can transfer data for the buffer bind point, but not directly
+	//to the buffer itself. Its kind of a proxy
+	glBufferData(GL_ARRAY_BUFFER,sizeof(v2D),v2D,GL_STATIC_DRAW);
+	//This has nothing to do with the VAO. It configures the GL_ARRAY BUFFER. The VAO just
+	//stores this config
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3* sizeof(float)));
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
 
 	//render loop: Each loop is a frame 
 	while(!glfwWindowShouldClose(window)) {
@@ -158,15 +169,11 @@ int main() {
 
 			glUseProgram(programId);
 
-			float timeDiff = glfwGetTime();
-			float greenVariance = (sin(timeDiff)/2.0f) + 0.5f;
-			int uniformAddr = glGetUniformLocation(programId,"changingColor");
-			glUniform4f(uniformAddr, 1.0, greenVariance, 0.5,1.0);
-
-			glBindVertexArray(vao);
-
+			glBindVertexArray(vaos[0]);
 			glDrawArrays(GL_TRIANGLES, 0, 3);
 			
+			glBindVertexArray(vaos[1]);
+			glDrawArrays(GL_TRIANGLES, 0, 3);
 			//All the operations from this frame where executed on the back buffer. The next frame
 			//will show those alterations and move the actual front buffer to the back, so we can change it 
 			glfwSwapBuffers(window); 
