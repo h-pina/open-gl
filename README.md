@@ -46,8 +46,8 @@ The next thing which confused me is the Vertex Array Objects (VAOs). By definiti
 
 >*A Vertex Array Object (VAO) is an OpenGL Object that stores all of the state needed to supply vertex data (with one minor exception noted below). It stores the format of the vertex data as well as the Buffer Objects (see below) providing the vertex data arrays. Note that a VAO merely references the buffers, it does not copy or freeze their contents; if referenced buffers are modified later, those changes will be seen when using the VAO.*
 
-So, basically, a VAO stores a reference to a buffer object and all the configuration done to it, so you dont need to reconfigure it everytime you use it.
-VAO objects work in a similar way as buffer objects. You first get a reference and bind that reference. From that point on all the modifications you apply to a buffer object will be stored in the VAO. To unbind the VAO (and thus stop saving new configurations to it) you can run glBindVertexArray(0). 
+So, basically, a VAO stores a reference to a buffer object and all the configuration (bind calls) done to it, so you dont need to reconfigure it everytime you use it.Its almost like a function!.
+VAO objects are OpenGL objects. You first get a reference and bind that reference. From that point on all the modifications you apply to  buffer objects  will be stored in the VAO. To unbind the VAO (and thus stop saving new configurations to it) you can run glBindVertexArray(0). 
 Heres an example creating two different VAOs, each storing vertex data of one triangle:
 ```
 	int bufferObjs[2], vaos[2];

@@ -4,7 +4,7 @@ INCLUDES = -I./include
 CPPFLAGS = -Wall $(INCLUDES)
 
 main:
-	g++ ${CPPFLAGS} ${GLFLAGS} -o ${TARGET} src/*.cpp include/glad/glad.c 
+	g++ ${CPPFLAGS} ${GLFLAGS} -o ${TARGET} src/*.cpp include/glad/glad.c include/stb_image/stb_image.cpp 
 	@./graphics
 
 
