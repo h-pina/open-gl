@@ -86,8 +86,5 @@ This idea of binding, editing and using seems to be the main philosophy of openG
 
 ### Things I haven`t undestood yet:
 
-- I have zero idea why the -lglfw works but the -lglfw3 dont work on my machine. Even tough I`m farely sure I dont have the glfw (without 3) installed.
+- I have zero idea why the -lglfw works but the -lglfw3 dont work on my machine. Even tough I`m fairly sure I dont have the glfw (without 3) installed.
 
-
-### Challenges
-- Try to render more than one object at once
